@@ -1,6 +1,7 @@
 import { AuthOptions, getServerSession } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
+import connect_db from './database'
 import UserModel from './database/models/user'
 
 const authOptions: AuthOptions = {
@@ -21,7 +22,9 @@ const authOptions: AuthOptions = {
                     return null
                 }
 
-                const user = await UserModel.findOne({ email })
+                await connect_db()
+
+                const user = await UserModel.findOne({ email }).populate('cart')
 
                 if (!user) {
                     throw new Error('User not found')
@@ -39,6 +42,25 @@ const authOptions: AuthOptions = {
             }
         })
     ],
+    callbacks: {
+        async session({ session, token }) {
+            if (session.user) {
+                session.user.id = token.id as string
+                session.user.name = token.name as string
+                session.user.email = token.email as string
+            }
+            return session
+        },
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id
+                token.email = user.email
+                token.name = user.name
+            }
+            return token
+        }
+    },
+
     session: {
         strategy: 'jwt'
     }
