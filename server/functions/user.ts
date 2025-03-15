@@ -28,9 +28,7 @@ export const getUser = async () => {
     try {
         const session = await checkSession()
 
-        const user = await UserModel.findOne({ email: session.user.email })
-            .populate('cart')
-            .select('-password')
+        const user = await UserModel.findOne({ email: session.user.email }).select('-password')
 
         if (!user) {
             throw new Error('User not found')

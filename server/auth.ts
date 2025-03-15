@@ -24,7 +24,7 @@ const authOptions: AuthOptions = {
 
                 await connect_db()
 
-                const user = await UserModel.findOne({ email }).populate('cart')
+                const user = await UserModel.findOne({ email })
 
                 if (!user) {
                     throw new Error('User not found')
