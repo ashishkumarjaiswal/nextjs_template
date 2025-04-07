@@ -4,30 +4,34 @@ import { NextResponse } from 'next/server'
 
 import { env } from './env'
 
+const publicRoutes = ['/signin', '/signup']
+
 export async function middleware(request: NextRequest) {
-    const token = await getToken({
-        req: request,
-        secret: env.NEXTAUTH_SECRET
-    })
+    const { pathname } = request.nextUrl
 
-    if (protectedRoutes.some(route => request.nextUrl.pathname.startsWith(route))) {
-        if (!token) {
-            return NextResponse.redirect(new URL('/signup', request.url))
-        }
-    }
+    const isPublicRoute = publicRoutes.includes(pathname)
 
-    if (unprotectedRoutes.some(route => request.nextUrl.pathname.startsWith(route))) {
-        if (token) {
+    try {
+        const token = await getToken({
+            req: request,
+            secret: env.NEXTAUTH_SECRET
+        })
+
+        if (token && isPublicRoute) {
             return NextResponse.redirect(new URL('/', request.url))
         }
-    }
 
-    return NextResponse.next()
+        if (!token && !isPublicRoute) {
+            return NextResponse.redirect(new URL('/signin', request.url))
+        }
+
+        return NextResponse.next()
+    } catch (error) {
+        console.error('Authentication error:', error)
+        return NextResponse.redirect(new URL('/signin', request.url))
+    }
 }
 
 export const config = {
-    matcher: ['/signup', '/signin']
+    matcher: ['/((?!api|_next/static|_next/image|favicon.ico|public/).*)']
 }
-
-const protectedRoutes = ['/dashboard']
-const unprotectedRoutes = ['/signup', '/signin']
