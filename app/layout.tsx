@@ -9,13 +9,15 @@ import './globals.css'
 import Providers from './Providers'
 
 const inter = Inter({
-    variable: '--font-inter',
-    subsets: ['latin']
+    subsets: ['latin'],
+    weight: ['400', '500', '600', '700'],
+    display: 'swap',
+    variable: '--font-inter'
 })
 
 export const metadata: Metadata = {
-    title: 'Code Nard',
-    description: 'Get best templates for you project'
+    title: 'Title',
+    description: 'Description'
 }
 
 export default async function RootLayout({
@@ -27,7 +29,7 @@ export default async function RootLayout({
 
     return (
         <html lang="en">
-            <body className={`${inter.variable} antialiased`}>
+            <body className={`${inter.className} antialiased`}>
                 <Providers session={session}>
                     <Navbar />
                     {children}
