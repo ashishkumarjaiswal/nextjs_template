@@ -1,8 +1,7 @@
 import { AuthOptions, getServerSession } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-import connect_db from './database'
-import UserModel from './database/models/user'
+import { prisma } from '@/lib/db'
 
 const authOptions: AuthOptions = {
     providers: [
@@ -22,9 +21,11 @@ const authOptions: AuthOptions = {
                     return null
                 }
 
-                await connect_db()
-
-                const user = await UserModel.findOne({ email })
+                const user = await prisma.user.findUnique({
+                    where: {
+                        email
+                    }
+                })
 
                 if (!user) {
                     throw new Error('User not found')
@@ -32,7 +33,7 @@ const authOptions: AuthOptions = {
 
                 if (user && user.password === password) {
                     return {
-                        id: user._id,
+                        id: user.id,
                         name: user.name,
                         email: user.email
                     }
