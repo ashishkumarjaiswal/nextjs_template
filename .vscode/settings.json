@@ -5,7 +5,6 @@
     "editor.formatOnSave": true,
     "eslint.validate": ["javascript"],
     "files.exclude": {
-
         "**/.turbo": true,
         "**/.next": true,
         "**/.vscode": true

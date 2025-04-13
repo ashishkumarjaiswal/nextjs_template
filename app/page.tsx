@@ -1,10 +1,6 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
-
 const page = () => {
-    const session = useSession()
-
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-100">
             <div className="text-center">
