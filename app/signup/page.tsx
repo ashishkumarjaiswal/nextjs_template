@@ -14,6 +14,7 @@ import { signUpAction } from '@/server/actions/user'
 export default function SignUp() {
     const router = useRouter()
 
+    const [loading, setLoading] = useState(false)
     const [data, setData] = useState({
         name: '',
         email: '',
@@ -28,6 +29,8 @@ export default function SignUp() {
             toast.warning('Password and confirm password do not match')
             return
         }
+
+        setLoading(true)
 
         try {
             const res = await signUpAction(data.name, data.email, data.password)
@@ -49,6 +52,8 @@ export default function SignUp() {
             const err = error as Error
             toast.error(err.message)
             console.error({ err })
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -97,6 +102,7 @@ export default function SignUp() {
                                         <Input
                                             id="password"
                                             type="password"
+                                            placeholder="********"
                                             required
                                             value={data.password}
                                             onChange={e =>
@@ -119,7 +125,7 @@ export default function SignUp() {
                                             }
                                         />
                                     </div>
-                                    <Button type="submit" className="w-full">
+                                    <Button disabled={loading} type="submit" className="w-full">
                                         Sign up
                                     </Button>
                                 </div>

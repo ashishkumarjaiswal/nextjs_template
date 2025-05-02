@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 export default function SignIn() {
+    const [loading, setLoading] = useState(false)
     const [data, setData] = useState({
         email: '',
         password: ''
@@ -21,6 +22,7 @@ export default function SignIn() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        setLoading(true)
 
         try {
             const res = await signIn('credentials', {
@@ -43,6 +45,8 @@ export default function SignIn() {
             const err = error as Error
             toast.error(err.message)
             console.error({ err })
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -86,6 +90,7 @@ export default function SignIn() {
                                         <Input
                                             id="password"
                                             type="password"
+                                            placeholder="********"
                                             required
                                             value={data.password}
                                             onChange={e =>
@@ -93,7 +98,7 @@ export default function SignIn() {
                                             }
                                         />
                                     </div>
-                                    <Button type="submit" className="w-full">
+                                    <Button disabled={loading} type="submit" className="w-full">
                                         Login
                                     </Button>
                                 </div>

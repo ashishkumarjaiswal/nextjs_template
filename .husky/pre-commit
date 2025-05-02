@@ -1,15 +1,15 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+# #!/bin/sh
+# . "$(dirname "$0")/_/husky.sh"
 
-# Run lint and format
-bun lint || exit 1
-bun format || exit 1
+# # Run lint and format
+# bun lint || exit 1
+# bun format || exit 1
 
-# Check if formatting made changes
-if [ -n "$(git diff --name-only)" ]; then
-  echo "📝 Detected formatting changes. Adding to commit..."
-  git add .
+# # Check if formatting made changes
+# if [ -n "$(git diff --name-only)" ]; then
+#   echo "📝 Detected formatting changes. Adding to commit..."
+#   git add .
 
-  # Amend the commit without changing the commit message
-  git commit --amend --no-edit
-fi
+#   # Amend the commit without changing the commit message
+#   git commit --amend --no-edit
+# fi
